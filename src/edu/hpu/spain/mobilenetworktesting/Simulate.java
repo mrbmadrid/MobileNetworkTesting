@@ -407,9 +407,9 @@ public class Simulate implements Runnable{
         */
         if(success[3]){
             successCase[3][10] /= successCase[3][7];
-            successCase[3][10] =((1000*successCase[3][10]))/1000.0;
+            successCase[3][10] =((int)(1000*successCase[3][10]))/1000.0;
             successCase[3][11] /= successCase[3][8];
-            successCase[3][11] =((1000*successCase[3][11]))/1000.0;
+            successCase[3][11] =((int)(1000*successCase[3][11]))/1000.0;
         }
         else{
             failureCase[3][6] /= failureCase[3][5];
