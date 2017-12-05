@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mobilenetworktesting;
+package edu.hpu.spain.mobilenetworktesting;
 
 import java.io.FileNotFoundException;
 import java.util.logging.Level;

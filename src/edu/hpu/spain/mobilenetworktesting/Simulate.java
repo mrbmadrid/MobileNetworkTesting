@@ -1,5 +1,5 @@
 
-package mobilenetworktesting;
+package edu.hpu.spain.mobilenetworktesting;
 
 import java.util.ArrayList;
 import java.util.Arrays;

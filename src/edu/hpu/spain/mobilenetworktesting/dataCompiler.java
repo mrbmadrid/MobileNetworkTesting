@@ -1,5 +1,5 @@
 
-package mobilenetworktesting;
+package edu.hpu.spain.mobilenetworktesting;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
