@@ -439,8 +439,8 @@ public class Node {
      */
     
     public void setUninfectedNeighbors(int messageType, ArrayList<Node> nodes){
-        for(int i = 0; i < neighbors.get(messageType).size(); i++){
-            int node = neighbors.get(messageType).get(i);
+        for(int i = 0; i < eligibleNeighbors.get(messageType).size(); i++){
+            int node = eligibleNeighbors.get(messageType).get(i);
             if(!nodes.get(node).isInfected(messageType))
                 uninfectedNeighbors.get(messageType).add(node);
         }
