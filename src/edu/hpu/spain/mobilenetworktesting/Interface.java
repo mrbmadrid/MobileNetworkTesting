@@ -5,10 +5,6 @@
  */
 package edu.hpu.spain.mobilenetworktesting;
 
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Cloud
@@ -56,6 +52,7 @@ public class Interface extends javax.swing.JFrame {
         label11 = new java.awt.Label();
         label12 = new java.awt.Label();
         fakeDest = new javax.swing.JCheckBox();
+        Running = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,7 +119,10 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(139, 139, 139)
-                        .addComponent(RunButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(RunButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(Running, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,7 +213,9 @@ public class Interface extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fakeDest)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addComponent(RunButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(RunButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Running, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -221,27 +223,20 @@ public class Interface extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RunButtonActionPerformed
-        try {
-            SimulationBatch batch = new SimulationBatch(
-                    Integer.parseInt(height.getText()), 
-                    Integer.parseInt(width.getText()),
-                    Integer.parseInt(population.getText()), 
-                    Integer.parseInt(popInc.getText()), 
-                    Integer.parseInt(transmitRange.getText()),
-                    Integer.parseInt(decayThresh.getText()),
-                    Integer.parseInt(maxBuffer.getText()),
-                    Integer.parseInt(ticksTransmit.getText()), 
-                    Integer.parseInt(maxRunTime.getText()), 
-                    Integer.parseInt(iterations.getText()),
-                    fakeDest.isSelected());
-            try {
-                batch.execute(Integer.parseInt(simulations.getText()));
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Thread batch = new Thread(new SimulationBatch(
+                Integer.parseInt(height.getText()),
+                Integer.parseInt(width.getText()),
+                Integer.parseInt(population.getText()),
+                Integer.parseInt(popInc.getText()),
+                Integer.parseInt(transmitRange.getText()),
+                Integer.parseInt(decayThresh.getText()),
+                Integer.parseInt(maxBuffer.getText()),
+                Integer.parseInt(ticksTransmit.getText()),
+                Integer.parseInt(maxRunTime.getText()),
+                Integer.parseInt(iterations.getText()),
+                Integer.parseInt(simulations.getText()),
+                fakeDest.isSelected(), Running), "Simulations");
+        batch.start();
     }//GEN-LAST:event_RunButtonActionPerformed
 
     /**
@@ -281,6 +276,7 @@ public class Interface extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button RunButton;
+    private java.awt.Label Running;
     private java.awt.TextField decayThresh;
     private javax.swing.JCheckBox fakeDest;
     private java.awt.TextField height;

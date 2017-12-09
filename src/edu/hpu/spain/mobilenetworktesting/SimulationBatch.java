@@ -1,28 +1,33 @@
 
 package edu.hpu.spain.mobilenetworktesting;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.awt.Label;
 
 /**
  * @description Allows running a collection of simulations over multiple threads. 
  * @author Brian Spain
  */
 
-public class SimulationBatch {
+public class SimulationBatch implements Runnable{
     
     SimulationEnvironment environment;
     
     private final int maxTime;
-    private final int iterations;
+    private final int iterations, simulations;
     private final ArrayList<dataCompiler> data;
     ArrayList<Thread> simGroup;
     private long timer;
+    Label Running;
     
     /**
+     * @param rangeDecayThreshold
+     * @param simulations
+     * @param useFakeDestination
+     * @param popInc
      * @description constructor which passes parameters to environment object.
      * @param height max y of the domain
      * @param width max x of the domain
@@ -36,7 +41,8 @@ public class SimulationBatch {
     
     public SimulationBatch(int height, int width, int population, int popInc, 
             int range, int rangeDecayThreshold, int maxBuffer, int transmitTime,
-            int maxTime, int iterations, boolean useFakeDestination) {
+            int maxTime, int iterations, int simulations, boolean useFakeDestination,
+            Label Running) {
         
         this.environment = new SimulationEnvironment(height, width, population,
             popInc, range, rangeDecayThreshold, transmitTime, maxBuffer, 
@@ -45,32 +51,26 @@ public class SimulationBatch {
         this.iterations = iterations;
         data = new ArrayList<>();
         simGroup = new ArrayList<>();
-        
+        this.simulations = simulations;
+        this.Running = Running;
     }
     
     /**
      * @description executes the requested number of simulations on six
      * simulation threads.
-     * @param simulations
-     * number of total simulations for each environment
-     * (total simulations is simulations
-     *environments)
-     * @throws InterruptedException
-     * @throws FileNotFoundException 
      */
     
-    public void execute(int simulations
-    ) throws InterruptedException, 
-            FileNotFoundException{
-        
+    @Override
+    public void run(){
+        Running.setText("Running");
         timer = System.currentTimeMillis();
-        
+        int simsrun = 0;
         for(int i = 0; i < iterations; i++){
             data.add(new dataCompiler());
         }
         
-        for(int n = 0; n < simulations
-                ; n++){
+        for(int n = 0; n < simulations; n++){
+            ++simsrun;
            /*
                 generate new environments.
             */
@@ -107,9 +107,13 @@ public class SimulationBatch {
                     simGroup.get(i).start();
                 }
             }
-            for(Thread sim : simGroup){
-                sim.join();
-            }
+            simGroup.forEach((sim) -> {
+                try {
+                    sim.join();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(SimulationBatch.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
             
             /*
                 Every 1000th simulation has all raw data stored in a text file
@@ -130,7 +134,7 @@ public class SimulationBatch {
                     }
             }
         }
-        
+        Running.setText("Done");
         /*
             Compile and output data for each batch of simulations
         */

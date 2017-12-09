@@ -29,6 +29,7 @@ public class dataCompiler{
     private final double[][] successCasesSD;
     private final double[][] graphDataSD;
     private int graphCases;
+    private int numSims;
     
     
     public dataCompiler(){
@@ -83,6 +84,7 @@ public class dataCompiler{
      */
     
     public void addData(ArrayList<double[][]> simData){
+        ++numSims;
         for(int messageType = 0; messageType < 4; messageType++){
             for(int i = 0; i < simData.get(0)[messageType].length; i++){
                 successCases[messageType][i] += simData.get(0)[messageType][i];
